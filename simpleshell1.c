@@ -15,7 +15,7 @@ int main() {
     while (1) {
         printf("#cisfun$ ");
 
-        lineSize = getline(&line, &size, stdin);
+        lineSize = my_getline(&line, &size, stdin);
 
         if (lineSize == -1) {
             break;
