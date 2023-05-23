@@ -13,7 +13,8 @@ int main() {
     size_t size = 0;
     ssize_t lineSize;
     while (1) {
-        printf("#cisfun$ ");
+        char prompt[] = "#cisfun$ ";
+        write(STDOUT_FILENO, prompt, sizeof(prompt) - 1);
 
         lineSize = my_getline(&line, &size, stdin);
 
@@ -33,14 +34,21 @@ int main() {
             }
             continue;
         } else if (strcmp(command, "exit") == 0) {
-            exitShell();
-	}else if (strcmp(command, "env") == 0) {
+            handleExitCommand(command);
+        } else if (strcmp(command, "env") == 0) {
             printEnvironment();
             continue;
+        }else if (strncmp(command, "setenv", 6) == 0) {
+	       handleSetenvCommand(command);
+       } else if (strncmp(command, "unsetenv", 8) == 0) {
+	 handleUnsetenvCommand(command);
         }
-	 executeCommand(command);
+	else	
+	{
+            executeCommand(command);
         }
- 
+    }
+
     free(line);
     return 0;
 }

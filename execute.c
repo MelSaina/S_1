@@ -7,24 +7,28 @@
 #define MAX_ARGS 10
 #define MAX_PATH 1024
 #include "shell.h"
-
 void executeCommand(char *command) {
-    pid_t pid;
-    pid = fork();
+    pid_t pid = fork();
 
     if (pid == -1) {
         perror("fork");
         return;
     } else if (pid == 0) {
         char *args[MAX_ARGS];
-        int numArgs = parseArguments(command, args);
+        int i = 0;
 
-        if (numArgs > 0) {
-            execvp(args[0], args);
-            perror(args[0]);
+        args[i++] = strtok(command, " ");
+        while (i < MAX_ARGS - 1) {
+            args[i] = strtok(NULL, " ");
+            if (args[i] == NULL)
+                break;
+            i++;
         }
+        args[i] = NULL;
 
-        exit(0);
+        execvp(args[0], args);
+        perror("execvp");
+        exit(1);
     } else {
         wait(NULL);
     }
